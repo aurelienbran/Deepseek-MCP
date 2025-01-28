@@ -1,0 +1,7 @@
+github
+python-dotenv
+octokit
+modelcontextprotocol
+requests
+pytest
+python-github-api
