@@ -1,0 +1,22 @@
+{
+  "name": "deepseek-mcp",
+  "version": "1.0.0",
+  "description": "Assistant GitHub avec DeepSeek R1 32B et MCP",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "keywords": ["github", "ai", "deepseek", "mcp"],
+  "author": "Aurelien Bran",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^20.0.1",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "eslint": "^8.36.0"
+  }
+}
