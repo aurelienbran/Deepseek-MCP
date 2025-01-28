@@ -3,8 +3,8 @@
 ## Prérequis Système
 
 ### Configuration Matérielle
-- Windows 10 ou 11 (64-bit)
-- Processeur x64 avec virtualisation
+- Windows 11 (64-bit)
+- Processeur x64 compatible virtualisation
 - Minimum 16 Go RAM (32 Go recommandés)
 - 100 Go d'espace disque libre
 - Connexion Internet haut débit
@@ -18,100 +18,129 @@
 
 ## Étape 1 : Préparation de l'Environnement Windows
 
-### Activer WSL2
-1. Ouvrir PowerShell en mode Administrateur
-2. Exécuter les commandes :
+### Activation des Fonctionnalités Windows
+⚠️ **Problèmes courants et solutions** :
+- Si les commandes échouent, utilisez l'interface graphique
+- Assurez-vous d'être en mode Administrateur
+
 ```powershell
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all
-wsl --install -d Ubuntu
+# Ouvrir PowerShell en mode Administrateur
+
+# Activer WSL et Plateforme de Machine Virtuelle
+dism /online /enable-feature /featurename:VirtualMachinePlatform /all
+dism /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all
+
+# Mettre à jour WSL
+wsl --update
+
+# Définir WSL 2 comme version par défaut
+wsl --set-default-version 2
 ```
 
-### Installation de Docker Desktop
-1. Télécharger depuis [Docker Desktop](https://www.docker.com/products/docker-desktop)
-2. Installer en sélectionnant :
-   - Use WSL 2 instead of Hyper-V
-   - Add shortcut to desktop
+### Alternatives en cas de problème
+1. Ouvrir "Fonctionnalités Windows"
+   - Appuyez sur Windows+R
+   - Tapez `optionalfeatures`
+   - Cochez manuellement :
+     * Sous-système Windows pour Linux
+     * Plateforme de machine virtuelle
 
-## Étape 2 : Installation des Dépendances
+2. Téléchargement manuel
+   - Télécharger le package de mise à jour Linux : 
+     https://wsl.azureedge.net/download/wsl/wsl2-linux-kernel/linux-msft-wsl-5.10.102.1.cab
+
+## Étape 2 : Installation de Docker Desktop
+
+### Téléchargement et Installation
+1. [Télécharger Docker Desktop](https://www.docker.com/products/docker-desktop)
+2. Pendant l'installation :
+   - Cocher "Use WSL 2 instead of Hyper-V"
+   - Autoriser les modifications système
+
+### Résolution des Problèmes Courants
+- En cas d'échec d'installation :
+  * Vérifier les mises à jour Windows
+  * Redémarrer complètement
+  * Désactiver temporairement les antivirus
+
+## Étape 3 : Installation des Dépendances
 
 ### Node.js
-1. Télécharger [Node.js LTS](https://nodejs.org/)
-2. Installer en cochant :
-   - Ajouter au PATH
-   - Installer les outils de compilation
-
-### Python
-1. Télécharger [Python](https://www.python.org/)
-2. Installer en cochant :
-   - Add Python to PATH
-   - Install pip
-
-### Vérification des Installations
 ```powershell
+# Installer Node.js LTS depuis le site officiel
+# https://nodejs.org/
+
+# Vérifier l'installation
 node --version
 npm --version
-python --version
-pip --version
-docker --version
 ```
 
-## Étape 3 : Installation du Projet
+### Python
+```powershell
+# Installer Python depuis le site officiel
+# https://www.python.org/
+
+# Vérifier l'installation
+python --version
+pip --version
+```
+
+## Étape 4 : Préparation du Projet
 
 ### Clonage du Repository
 ```powershell
+# Cloner le dépôt
 git clone https://github.com/aurelienbran/Deepseek-MCP.git
 cd Deepseek-MCP
-```
 
-### Installation des Dépendances
-```powershell
+# Installation des dépendances
 npm install
 pip install -r requirements.txt
 ```
 
-## Étape 4 : Configuration GitHub
-
-### Création d'un Token GitHub
-1. Aller sur [GitHub Settings](https://github.com/settings/tokens)
-2. Générer un nouveau token avec les scopes :
+### Configuration GitHub
+1. [Créer un token GitHub](https://github.com/settings/tokens)
+2. Scopes recommandés :
    - repo
    - workflow
    - write:packages
 
-### Configuration du Token
+## Étape 5 : Installation d'Ollama et DeepSeek R1
+
 ```powershell
-# Créer un fichier .env
-cp .env.example .env
-# Éditer et ajouter votre token GitHub
+# Installer Ollama
+irm get.ollama.ai | iex
+
+# Télécharger DeepSeek R1
+ollama pull deepseek:r1-32b
 ```
 
-## Étape 5 : Démarrage du Projet
+## Démarrage des Services
 
-### Lancement des Services
+### OpenWebUI
 ```powershell
-# Démarrer Ollama
-ollama pull deepseek:r1-32b
-
-# Lancer OpenWebUI
 docker run -d `
   --network=host `
   -v open-webui:/app/backend/data `
-  -e OLLAMA_BASE_URL=http://host.docker.internal:11434 `
+  -e OLLAMA_BASE_URL=http://localhost:11434 `
   --name open-webui `
   --restart always `
   ghcr.io/open-webui/open-webui:main
 ```
 
 ## Dépannage
+
+### Problèmes Courants
 - Vérifier les logs Docker
 - S'assurer que tous les ports sont disponibles
-- Mettre à jour les pilotes GPU si nécessaire
+- Mettre à jour les pilotes GPU
+- Redémarrer en cas de problème
 
-## Ressources Complémentaires
+### Ressources Complémentaires
 - [Documentation Ollama](https://ollama.ai/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
+- [Support Docker](https://docs.docker.com/desktop/troubleshoot/overview/)
 
 ---
 
-**Note** : Toujours vérifier les mises à jour et la compatibilité des versions.
+**Note** : Cette procédure est adaptative. N'hésitez pas à consulter la documentation officielle en cas de problème spécifique.
