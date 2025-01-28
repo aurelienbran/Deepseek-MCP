@@ -12,8 +12,8 @@
   "author": "Aurelien Bran",
   "license": "MIT",
   "dependencies": {
+    "@octokit/rest": "^20.0.1",
     "dotenv": "^16.0.3",
-    "github": "^14.0.0",
     "fs-extra": "^11.2.0"
   },
   "devDependencies": {
