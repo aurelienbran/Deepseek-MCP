@@ -1,7 +1,9 @@
-github
-python-dotenv
-octokit
-modelcontextprotocol
 requests
+python-dotenv
+githubpy
+PyGithub
 pytest
-python-github-api
+openai
+transformers
+torch
+pandas
