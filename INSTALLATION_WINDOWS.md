@@ -1,119 +1,189 @@
-# Installation de Deepseek MCP sur Windows
+# Guide Complet d'Installation de Deepseek MCP sur Windows 11
 
-## Prérequis Système
+## 🖥️ Prérequis Système Détaillés
 
-### Configuration Matérielle
-- Windows 11 (64-bit)
-- Processeur x64
-- Minimum 16 Go RAM (32 Go recommandés)
-- 100 Go d'espace disque libre
-- Connexion Internet haut débit
+### Configuration Matérielle Recommandée
+- **Système d'exploitation** : Windows 11 64 bits
+- **Processeur** : 
+  * Architecture x64 
+  * Recommandé : 8 cœurs logiques
+  * Support des instructions AVX2
+- **RAM** : 
+  * Minimum : 16 Go 
+  * Recommandé : 32 Go
+- **Stockage** : 
+  * Minimum : 100 Go libres
+  * Type SSD recommandé
+- **Connexion Internet** : Haut débit stable
 
-### Logiciels Requis
-- Node.js LTS
-- Python 3.9+
-- Git
-- Ollama
-- OpenWebUI
-
-## Étape 1 : Préparation de l'Environnement
-
-### Installation de Node.js
-1. Télécharger [Node.js LTS](https://nodejs.org/)
-2. Installer en cochant :
-   - Ajouter au PATH
-   - Installer les outils de compilation
-
-### Installation de Python
-1. Télécharger [Python](https://www.python.org/)
-2. Installer en cochant :
-   - Add Python to PATH
-   - Install pip
-
-### Vérification des Installations
+### Vérification Préalable
 ```powershell
+# Commande de vérification système
+systeminfo
+```
+
+## 🔧 Préparation de l'Environnement de Développement
+
+### 1. Installation de Node.js
+
+#### Téléchargement
+1. Visiter [nodejs.org](https://nodejs.org/)
+2. Télécharger la version LTS (Long Term Support)
+
+#### Installation Détaillée
+- Lancez l'installateur
+- ✅ Cocher "Automatically install the necessary tools"
+- ✅ Ajouter au PATH Windows
+- ✅ Activer l'installation des modules natifs
+
+```powershell
+# Vérification post-installation
 node --version
 npm --version
+```
+
+### 2. Installation de Python
+
+#### Téléchargement
+1. Visiter [python.org](https://www.python.org/downloads/)
+2. Télécharger Python 3.9+ (recommandé 3.10 ou 3.11)
+
+#### Installation Personnalisée
+- Cocher "Add Python to PATH"
+- Sélectionner "Customize installation"
+- Activer "pip" et "python test suite"
+
+```powershell
+# Vérification post-installation
 python --version
 pip --version
 ```
 
-## Étape 2 : Installation d'Ollama et OpenWebUI
+### 3. Installation de Git
 
-### Ollama
+#### Téléchargement
+1. Visiter [git-scm.com](https://git-scm.com/download/win)
+2. Télécharger la version 64 bits
+
+#### Configuration
+- Sélectionner "Use Visual Studio Code as default editor"
+- Choisir "Use Git from the command line and also from 3rd-party software"
+- Sélectionner "Use Windows' default console window"
+
 ```powershell
-# Installation d'Ollama
-irm get.ollama.ai | iex
-
-# Télécharger DeepSeek R1
-ollama pull deepseek:r1-32b
+# Vérification
+git --version
 ```
 
-### OpenWebUI
+## 🤖 Installation des Outils IA
+
+### 4. Installation d'Ollama
+
+#### Méthode d'Installation
 ```powershell
-# Installation via npm (sans Docker)
+# Script d'installation automatique
+irm get.ollama.ai | iex
+```
+
+#### Téléchargement du Modèle DeepSeek
+```powershell
+# Récupération du modèle R1 32B
+ollama pull deepseek:r1-32b
+
+# Vérification du modèle
+ollama list
+```
+
+### 5. Configuration d'OpenWebUI
+
+#### Installation Globale
+```powershell
+# Installation via npm
 npm install -g open-webui
 ```
 
-## Étape 3 : Configuration du Projet
+## 🚀 Déploiement du Projet Deepseek MCP
 
-### Clonage du Repository
+### 6. Clonage du Repository
 ```powershell
-# Cloner le dépôt
+# Navigation vers le dossier de projets
+cd D:\Projets  # Adapter selon votre configuration
+
+# Clonage
 git clone https://github.com/aurelienbran/Deepseek-MCP.git
 cd Deepseek-MCP
+```
 
-# Installation des dépendances
+### 7. Installation des Dépendances
+```powershell
+# Dépendances Node.js
 npm install
+
+# Dépendances Python
 pip install -r requirements.txt
 ```
 
-## Étape 4 : Configuration GitHub
+### 8. Configuration GitHub
 
-### Création d'un Token GitHub
+#### Création d'un Token
 1. Aller sur [GitHub Settings](https://github.com/settings/tokens)
-2. Générer un nouveau token avec les scopes :
-   - repo
-   - workflow
-   - write:packages
+2. Générer un nouveau token personnel
+3. Scopes à sélectionner :
+   - `repo` (Full control of private repositories)
+   - `workflow`
+   - `write:packages`
 
-### Configuration du Token
+#### Configuration du .env
 ```powershell
-# Créer un fichier .env
+# Copier le fichier d'exemple
 cp .env.example .env
-# Éditer et ajouter votre token GitHub
+
+# Éditer avec votre token
+code .env  # Ou tout autre éditeur
 ```
 
-## Étape 5 : Lancement du Projet
+## 🧪 Tests et Validation
 
-### Tests et Vérifications
+### Exécution des Tests
 ```powershell
 # Tests JavaScript
 npm test
 
 # Tests Python
 pytest tests/
+```
 
-# Lancer le script principal
+### Lancement du Projet
+```powershell
+# Démarrage
 npm start
 ```
 
-## Alternatives et Dépannage
-
-### Sans OpenWebUI
-- Utiliser l'interface de ligne de commande Ollama
-- Développer une interface personnalisée
+## 🛠️ Dépannage
 
 ### Problèmes Courants
 - Vérifier les versions des dépendances
-- S'assurer que tous les ports sont disponibles
-- Mettre à jour les packages
+- Mettre à jour npm et pip
+- Redémarrer entre chaque installation
 
-## Ressources Complémentaires
+### Ressources de Support
 - [Documentation Ollama](https://ollama.ai/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [GitHub CLI](https://cli.github.com/)
+- [GitHub CLI Documentation](https://cli.github.com/)
+
+## 📋 Check-list Finale
+
+- [ ] Node.js installé et configuré
+- [ ] Python installé et configuré
+- [ ] Git installé
+- [ ] Ollama installé
+- [ ] DeepSeek R1 32B téléchargé
+- [ ] OpenWebUI installé
+- [ ] Repository cloné
+- [ ] Dépendances installées
+- [ ] Token GitHub configuré
+- [ ] Tests exécutés avec succès
 
 ---
 
-**Note** : Cette procédure est adaptative. N'hésitez pas à consulter la documentation officielle en cas de problème spécifique.
+**Note Importante** : Ce guide est évolutif. N'hésitez pas à signaler tout problème ou amélioration.
