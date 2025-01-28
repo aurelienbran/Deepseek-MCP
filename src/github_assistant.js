@@ -1,4 +1,4 @@
-const { Github } = require('github');
+const { Octokit } = require('@octokit/rest');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
@@ -7,36 +7,28 @@ dotenv.config();
 
 class GitHubAssistant {
     constructor(token) {
-        this.github = new Github({
-            token: token
+        this.octokit = new Octokit({ 
+            auth: token,
+            userAgent: 'DeepSeek-MCP-Assistant/1.0.0'
         });
     }
 
     async analyzeRepository(owner, repo) {
         try {
-            const repository = await this.github.repos.get({ owner, repo });
-            const contents = await this.github.repos.getContent({ owner, repo, path: '' });
+            const { data: repository } = await this.octokit.repos.get({ owner, repo });
+            const { data: contents } = await this.octokit.repos.getContent({ owner, repo, path: '' });
+            const { data: issues } = await this.octokit.issues.listForRepo({ owner, repo });
             
             return {
                 name: repository.name,
-                description: repository.description,
+                description: repository.description || 'Pas de description',
                 language: repository.language,
                 files: contents.map(file => file.name),
-                issues: await this.countIssues(owner, repo)
+                issues: issues.length
             };
         } catch (error) {
             console.error('Erreur lors de l\'analyse du repository:', error);
             throw error;
-        }
-    }
-
-    async countIssues(owner, repo) {
-        try {
-            const issues = await this.github.issues.listForRepo({ owner, repo });
-            return issues.length;
-        } catch (error) {
-            console.error('Erreur lors du comptage des issues:', error);
-            return 0;
         }
     }
 
@@ -49,7 +41,7 @@ class GitHubAssistant {
                 content: `# ${analysis.name}
 
 ## Description
-${analysis.description || 'Projet sans description'}
+${analysis.description}
 
 ## Langage Principal
 ${analysis.language}
@@ -69,7 +61,7 @@ ${analysis.language}
     async applyChanges(owner, repo, changes) {
         for (const change of changes) {
             try {
-                await this.github.repos.createOrUpdateFileContents({
+                await this.octokit.repos.createOrUpdateFileContents({
                     owner,
                     repo,
                     path: change.path,
@@ -84,7 +76,6 @@ ${analysis.language}
         }
     }
 
-    // Nouvelle méthode : Générer un rapport de projet
     async generateProjectReport(owner, repo) {
         const analysis = await this.analyzeRepository(owner, repo);
         const report = {
