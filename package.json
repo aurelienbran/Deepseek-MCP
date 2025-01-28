@@ -12,11 +12,18 @@
   "author": "Aurelien Bran",
   "license": "MIT",
   "dependencies": {
-    "@octokit/rest": "^20.0.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "github": "^14.0.0",
+    "fs-extra": "^11.2.0"
   },
   "devDependencies": {
     "jest": "^29.5.0",
     "eslint": "^8.36.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
