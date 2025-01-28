@@ -4,88 +4,58 @@
 
 ### Configuration Matérielle
 - Windows 11 (64-bit)
-- Processeur x64 compatible virtualisation
+- Processeur x64
 - Minimum 16 Go RAM (32 Go recommandés)
 - 100 Go d'espace disque libre
 - Connexion Internet haut débit
 
 ### Logiciels Requis
-- Windows Subsystem for Linux 2 (WSL2)
-- Docker Desktop
 - Node.js LTS
 - Python 3.9+
 - Git
+- Ollama
+- OpenWebUI
 
-## Étape 1 : Préparation de l'Environnement Windows
+## Étape 1 : Préparation de l'Environnement
 
-### Activation des Fonctionnalités Windows
-⚠️ **Problèmes courants et solutions** :
-- Si les commandes échouent, utilisez l'interface graphique
-- Assurez-vous d'être en mode Administrateur
+### Installation de Node.js
+1. Télécharger [Node.js LTS](https://nodejs.org/)
+2. Installer en cochant :
+   - Ajouter au PATH
+   - Installer les outils de compilation
 
+### Installation de Python
+1. Télécharger [Python](https://www.python.org/)
+2. Installer en cochant :
+   - Add Python to PATH
+   - Install pip
+
+### Vérification des Installations
 ```powershell
-# Ouvrir PowerShell en mode Administrateur
-
-# Activer WSL et Plateforme de Machine Virtuelle
-dism /online /enable-feature /featurename:VirtualMachinePlatform /all
-dism /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all
-
-# Mettre à jour WSL
-wsl --update
-
-# Définir WSL 2 comme version par défaut
-wsl --set-default-version 2
-```
-
-### Alternatives en cas de problème
-1. Ouvrir "Fonctionnalités Windows"
-   - Appuyez sur Windows+R
-   - Tapez `optionalfeatures`
-   - Cochez manuellement :
-     * Sous-système Windows pour Linux
-     * Plateforme de machine virtuelle
-
-2. Téléchargement manuel
-   - Télécharger le package de mise à jour Linux : 
-     https://wsl.azureedge.net/download/wsl/wsl2-linux-kernel/linux-msft-wsl-5.10.102.1.cab
-
-## Étape 2 : Installation de Docker Desktop
-
-### Téléchargement et Installation
-1. [Télécharger Docker Desktop](https://www.docker.com/products/docker-desktop)
-2. Pendant l'installation :
-   - Cocher "Use WSL 2 instead of Hyper-V"
-   - Autoriser les modifications système
-
-### Résolution des Problèmes Courants
-- En cas d'échec d'installation :
-  * Vérifier les mises à jour Windows
-  * Redémarrer complètement
-  * Désactiver temporairement les antivirus
-
-## Étape 3 : Installation des Dépendances
-
-### Node.js
-```powershell
-# Installer Node.js LTS depuis le site officiel
-# https://nodejs.org/
-
-# Vérifier l'installation
 node --version
 npm --version
-```
-
-### Python
-```powershell
-# Installer Python depuis le site officiel
-# https://www.python.org/
-
-# Vérifier l'installation
 python --version
 pip --version
 ```
 
-## Étape 4 : Préparation du Projet
+## Étape 2 : Installation d'Ollama et OpenWebUI
+
+### Ollama
+```powershell
+# Installation d'Ollama
+irm get.ollama.ai | iex
+
+# Télécharger DeepSeek R1
+ollama pull deepseek:r1-32b
+```
+
+### OpenWebUI
+```powershell
+# Installation via npm (sans Docker)
+npm install -g open-webui
+```
+
+## Étape 3 : Configuration du Projet
 
 ### Clonage du Repository
 ```powershell
@@ -98,48 +68,51 @@ npm install
 pip install -r requirements.txt
 ```
 
-### Configuration GitHub
-1. [Créer un token GitHub](https://github.com/settings/tokens)
-2. Scopes recommandés :
+## Étape 4 : Configuration GitHub
+
+### Création d'un Token GitHub
+1. Aller sur [GitHub Settings](https://github.com/settings/tokens)
+2. Générer un nouveau token avec les scopes :
    - repo
    - workflow
    - write:packages
 
-## Étape 5 : Installation d'Ollama et DeepSeek R1
-
+### Configuration du Token
 ```powershell
-# Installer Ollama
-irm get.ollama.ai | iex
-
-# Télécharger DeepSeek R1
-ollama pull deepseek:r1-32b
+# Créer un fichier .env
+cp .env.example .env
+# Éditer et ajouter votre token GitHub
 ```
 
-## Démarrage des Services
+## Étape 5 : Lancement du Projet
 
-### OpenWebUI
+### Tests et Vérifications
 ```powershell
-docker run -d `
-  --network=host `
-  -v open-webui:/app/backend/data `
-  -e OLLAMA_BASE_URL=http://localhost:11434 `
-  --name open-webui `
-  --restart always `
-  ghcr.io/open-webui/open-webui:main
+# Tests JavaScript
+npm test
+
+# Tests Python
+pytest tests/
+
+# Lancer le script principal
+npm start
 ```
 
-## Dépannage
+## Alternatives et Dépannage
+
+### Sans OpenWebUI
+- Utiliser l'interface de ligne de commande Ollama
+- Développer une interface personnalisée
 
 ### Problèmes Courants
-- Vérifier les logs Docker
+- Vérifier les versions des dépendances
 - S'assurer que tous les ports sont disponibles
-- Mettre à jour les pilotes GPU
-- Redémarrer en cas de problème
+- Mettre à jour les packages
 
-### Ressources Complémentaires
+## Ressources Complémentaires
 - [Documentation Ollama](https://ollama.ai/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Support Docker](https://docs.docker.com/desktop/troubleshoot/overview/)
+- [GitHub CLI](https://cli.github.com/)
 
 ---
 
