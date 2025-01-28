@@ -1,0 +1,31 @@
+# Dépendances
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnement
+.env
+*.env
+venv/
+.venv/
+
+# Fichiers de log
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+build/
+
+# Caches système
+.DS_Store
+Thumbs.db
+
+# Fichiers sensibles
+*.pem
+*.key
